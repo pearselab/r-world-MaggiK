@@ -6,16 +6,18 @@ mat_func<- function(x, y){
   return(mat)
 }
 mat<- mat_func(5,5)
+x<-5
+y<-5
   #creating the corners of the matrix
-ul<- round(rnorm(1, mean=3), digits=2) #starting height for upper left
-ur<- round(rnorm(1, mean=3), digits=2) #starting height for upper right
-ll<- round(rnorm(1, mean=3), digits=2) #starting height for lower left
-lr<- round(rnorm(1, mean=3), digits=2) #starting height for lower right
+upl<- round(rnorm(1, mean=3), digits=2) #starting height for upper left
+upr<- round(rnorm(1, mean=3), digits=2) #starting height for upper right
+lol<- round(rnorm(1, mean=3), digits=2) #starting height for lower left
+lor<- round(rnorm(1, mean=3), digits=2) #starting height for lower right
 #adding the values to the matrix
-mat[1,1]<- ul #upper left
-mat[1,y]<- ur #upper right
-mat[x,1]<- ll #lower left
-mat[x,y]<- lr #lower right
+mat[1,1]<- upl #upper left
+mat[1,y]<- upr #upper right
+mat[x,1]<- lol #lower left
+mat[x,y]<- lor #lower right
 
 #checking out the matrix with corners
 mat
@@ -24,12 +26,12 @@ mat
 #creating the center point. This is a function of the matrix. 
 diamond_step<-function(mat){
   x<- ncol(mat) #number of columns in the matrix
-  y<- ncrow(mat) #number of rows in the matrix
+  y<- nrow(mat) #number of rows in the matrix
   #defining the matrix corners
-  mat[1,1]<- ul #upper left
-  mat[1,y]<- ur #upper right
-  mat[x,1]<- ll #lower left
-  mat[x,y]<- lr #lower right
+  ul<- mat[1,1] #upper left
+  ur<- mat[1,y] #upper right
+  ll<- mat[x,1] #lower left
+  lr<- mat[x,y] #lower right
   mn_vector<- c(ul,ur,ll,lr) #addingt the corner values into a vector to take the mean
   md <- mean(mn_vector) #md: mean of the four corners
   #defing the middle of the four corners so it knows where to insert the mean (md) value
@@ -48,10 +50,10 @@ square_step<-function(mat){
   x<- ncol(mat) #number of columns in the matrix
   y<- nrow(mat) #number of rows in the matrix
   #defining the matrix corners
-  mat[1,1]<- ul #upper left
-  mat[1,y]<- ur #upper right
-  mat[x,1]<- ll #lower left
-  mat[x,y]<- lr #lower right
+  ul<- mat[1,1] #upper left
+  ur<- mat[1,y] #upper right
+  ll<- mat[x,1] #lower left
+  lr<- mat[x,y] #lower right
   mn_vector<- c(ul,ur,ll,lr) #addingt the corner values into a vector to take the mean
   #md: mean of the four corners
   md <- mean(mn_vector)
@@ -74,36 +76,60 @@ diamond_square_step<- function(mat){
   mat<- square_step(mat)
   return(mat)
 }
-
-mat<- diamond_square_step(mat)
+mat<-diamond_square_step(mat)
 mat
 
 
+#upper left
+x=5
+y=5
+med_x<- median(1:x)
+med_y<- median(1:y)
+mat1<- diamond_square_step(mat[1:med_x, 1:med_y])
+mat1
+mat
+#upper right
+x=5
+y=5
+med_x<- median(1:x)
+med_x
+med_y<- median(1:y)
+med_y
+len_x<- ncol(mat)
+len_x
+len_y<- nrow(mat)
+mat2<- diamond_square_step(mat[1:med_x, med_y:len_y])
+mat2
 
-#diamond
-x<- ncol(mat) #number of columns in the matrix
-y<- nrow(mat) #number of rows in the matrix
+#combine the two matrices
+m1_m2<-cbind(mat1, mat2)
 
-#right square
-mat[1,3]<- ul #upper left
-mat[1,y]<- ur #upper right
-mat[3,3]<- ll #lower left
-mat[3,5]<- lr #lower right
-mn_vector<- c(ul,ur,ll,lr) #addingt the corner values into a vector to take the mean
-md <- mean(mn_vector) #md: mean of the four corners
-
-#defing the middle of the four corners so it knows where to insert the mean (md) value
-med_x= median(3:5)
-med_y= median(1:3)
-mat[med_y, med_x]<- md  #adding the mean of the four corners to the middle of the matrix
+#lower left matrice
+x=5
+y=5
+med_x<- median(1:x)
+med_x
+med_y<- median(1:y)
+med_y
+len_x<- ncol(mat)
+len_x
+len_y<- nrow(mat)
+mat3<- diamond_square_step(mat[med_y:len_y, 1:med_x])
+mat3
 mat
 
+#lower right matrice
+x=5
+y=5
+med_x<- median(1:x)
+med_x
+med_y<- median(1:y)
+med_y
+len_x<- ncol(mat)
+len_x
+len_y<- nrow(mat)
+mat4<- diamond_square_step(mat[med_y:len_y, med_x:len_x])
+mat4
 
-#square
-mat[1, med_y]<- mean(ul,ur, md) #middle upper
-mat[med_x, 1]<- mean(ul, md, ll) #middle left
-mat[med_x, y]<- mean(ur, md, lr) #middle right
-mat[x, med_y]<- mean(ll, md, lr) #middle bottom
-mat
-
-#smaller squares
+m3_m4<-cbind(mat3, mat4)
+full_matr<-rbind(m1_m2, m3_m4)
