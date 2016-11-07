@@ -72,22 +72,58 @@ mat
 
 ##Creating the diamond_square_step: Function calls the two above functions and repeats them for each smaller square. 
 diamond_square_step<- function(mat){
+  med_x<- median(1:x)
+  med_y<- median(1:y)
+  len_x<- ncol(mat)
+  len_y<- nrow(mat)
   mat<-diamond_step(mat)
   mat<- square_step(mat)
+  mat<- other_squares(mat)
   return(mat)
 }
 mat<-diamond_square_step(mat)
 mat
 
+#variables needed in other_squares
+med_x<- median(1:x)
+med_y<- median(1:y)
+len_x<- ncol(mat)
+len_y<- nrow(mat)
 
+#function to fill in the squares
+other_squares<-function(mat){
+  mat[1:med_x, 1:med_y]<- diamond_square_step(mat[1:med_x, 1:med_y])
+  mat[1:med_x, med_y:len_y]<- diamond_square_step(mat[1:med_x, med_y:len_y])
+  mat[med_y:len_y, 1:med_x]<- diamond_square_step(mat[med_y:len_y, 1:med_x])
+  mat[med_y:len_y, med_x:len_x]<- diamond_square_step(mat[med_y:len_y, med_x:len_x])
+return(mat)
+}
+mat<-other_squares(mat)
+mat
+
+mat[1:med_x, 1:med_y]<- diamond_square_step(mat[1:med_x, 1:med_y])
+mat[1:med_x, med_y:len_y]<- diamond_square_step(mat[1:med_x, med_y:len_y])
+mat[med_y:len_y, 1:med_x]<- diamond_square_step(mat[med_y:len_y, 1:med_x])
+mat[med_y:len_y, med_x:len_x]<- diamond_square_step(mat[med_y:len_y, med_x:len_x])
+
+mat
+
+diamond_square_step(mat[1:med_x, 1:med_y])
+diamond_square_step(mat[1:med_x, med_y:len_y])
+diamond_square_step(mat[med_y:len_y, 1:med_x])
+diamond_square_step(mat[med_y:len_y, med_x:len_x])
+
+mat
 #upper left
 x=5
 y=5
 med_x<- median(1:x)
 med_y<- median(1:y)
-mat1<- diamond_square_step(mat[1:med_x, 1:med_y])
+mat[1:med_x, 1:med_y]<-diamond_square_step(mat[1:med_x, 1:med_y])
+mat
 mat1
 mat
+## need to change this so it copies back into the original mat1 should be  mat
 #upper right
 x=5
 y=5
@@ -99,8 +135,9 @@ len_x<- ncol(mat)
 len_x
 len_y<- nrow(mat)
 mat2<- diamond_square_step(mat[1:med_x, med_y:len_y])
+mat[1:med_x, med_y:len_y]
 mat2
-
+mat
 #combine the two matrices
 m1_m2<-cbind(mat1, mat2)
 
@@ -116,8 +153,9 @@ len_x
 len_y<- nrow(mat)
 mat3<- diamond_square_step(mat[med_y:len_y, 1:med_x])
 mat3
+mat[1,1]
+mat[med_y:len_y, med_x:len_x]
 mat
-
 #lower right matrice
 x=5
 y=5
