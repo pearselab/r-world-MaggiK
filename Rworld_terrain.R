@@ -72,14 +72,10 @@ mat
 
 ##Creating the diamond_square_step: Function calls the two above functions and repeats them for each smaller square. 
 diamond_square_step<- function(mat){
-  med_x<- median(1:x)
-  med_y<- median(1:y)
-  len_x<- ncol(mat)
-  len_y<- nrow(mat)
   mat<-diamond_step(mat)
   mat<- square_step(mat)
-  mat<- other_squares(mat)
-  return(mat)
+    mat<- other_squares(mat)
+    return(mat)
 }
 mat<-diamond_square_step(mat)
 mat
@@ -90,8 +86,13 @@ med_y<- median(1:y)
 len_x<- ncol(mat)
 len_y<- nrow(mat)
 
+#change into for loop within diamond step. Iterate over the sequence (col?)
 #function to fill in the squares
 other_squares<-function(mat){
+  med_x<- median(1:x)
+  med_y<- median(1:y)
+  len_x<- ncol(mat)
+  len_y<- nrow(mat)
   mat[1:med_x, 1:med_y]<- diamond_square_step(mat[1:med_x, 1:med_y])
   mat[1:med_x, med_y:len_y]<- diamond_square_step(mat[1:med_x, med_y:len_y])
   mat[med_y:len_y, 1:med_x]<- diamond_square_step(mat[med_y:len_y, 1:med_x])
