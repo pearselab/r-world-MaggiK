@@ -54,9 +54,19 @@ setup.plants(repr, surv, c_mat)
 
 ###Suvival
 survive <- function(cell, info){
+  if(is.na(cell)=TRUE){
+    stop("it has water")
   #...some code to check whether cell is empty or has water...
-  if(runif(1) <= info$survive[plant])
+  }else{if(runif(1) <= info$survive[plant])
     #$The plant survived! so do something...
+  }
 }
 
+plant.timestep <- function(plants, terrain, info){
+  survive <- function(plant, info){
+    #...survive function...
+  }
+  #...looping et al...
+  return(new.plants.matrix)
+}
 

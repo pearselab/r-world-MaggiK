@@ -5,9 +5,9 @@ mat_func<- function(x, y){
   mat<- matrix(ncol=x, nrow=y)
   return(mat)
 }
-mat<- mat_func(5,5)
-x<-5
-y<-5
+mat<- mat_func(9,9)
+x<-9
+y<-9
   #creating the corners of the matrix
 upl<- round(rnorm(1, mean=3), digits=2) #starting height for upper left
 upr<- round(rnorm(1, mean=3), digits=2) #starting height for upper right
@@ -74,11 +74,35 @@ mat
 diamond_square_step<- function(mat){
   mat<-diamond_step(mat)
   mat<- square_step(mat)
-    mat<- other_squares(mat)
-    return(mat)
+for (i in ncol(mat)){
+    med_x<- median(1:i)
+    med_y<- median(1:i)
+    len_x<- ncol(mat)
+    len_y<- nrow(mat)
+    mat[1:med_x, 1:med_y]<- diamond_step(mat[1:med_x, 1:med_y])
+    mat[1:med_x, med_y:len_y]<- diamond_step(mat[1:med_x, med_y:len_y])
+    mat[med_y:len_y, 1:med_x]<- diamond_step(mat[med_y:len_y, 1:med_x])
+    mat[med_y:len_y, med_x:len_x]<- diamond_step(mat[med_y:len_y, med_x:len_x]) 
+    mat[1:med_x, 1:med_y]<- square_step(mat[1:med_x, 1:med_y])
+    mat[1:med_x, med_y:len_y]<- square_step(mat[1:med_x, med_y:len_y])
+    mat[med_y:len_y, 1:med_x]<- square_step(mat[med_y:len_y, 1:med_x])
+    mat[med_y:len_y, med_x:len_x]<- square_step(mat[med_y:len_y, med_x:len_x])
 }
+  for (i in rep(seq(from=1, to=(ncol(mat)-2), by=2), each=3)){
+    mat[i:(i+2), i:(i+2)]<-diamond_step(mat[i:(i+2), i:(i+2)])
+    mat[i:(i+2), i:(i+2)]<-square_step(mat[i:(i+2), i:(i+2)])
+  }
+  return(mat)
+}
+
 mat<-diamond_square_step(mat)
 mat
+
+diamond_square_step<- function(mat){
+  mat<-diamond_step(mat)
+  mat<- square_step(mat)
+  return(mat)
+}
 
 #variables needed in other_squares
 med_x<- median(1:x)
@@ -91,8 +115,8 @@ len_y<- nrow(mat)
 other_squares<-function(mat){
   med_x<- median(1:x)
   med_y<- median(1:y)
-  len_x<- ncol(mat)
-  len_y<- nrow(mat)
+  len_x<- x
+  len_y<- y
   mat[1:med_x, 1:med_y]<- diamond_square_step(mat[1:med_x, 1:med_y])
   mat[1:med_x, med_y:len_y]<- diamond_square_step(mat[1:med_x, med_y:len_y])
   mat[med_y:len_y, 1:med_x]<- diamond_square_step(mat[med_y:len_y, 1:med_x])
@@ -101,7 +125,8 @@ return(mat)
 }
 mat<-other_squares(mat)
 mat
-
+x=7
+y=7
 mat[1:med_x, 1:med_y]<- diamond_square_step(mat[1:med_x, 1:med_y])
 mat[1:med_x, med_y:len_y]<- diamond_square_step(mat[1:med_x, med_y:len_y])
 mat[med_y:len_y, 1:med_x]<- diamond_square_step(mat[med_y:len_y, 1:med_x])
@@ -115,17 +140,34 @@ diamond_square_step(mat[med_y:len_y, 1:med_x])
 diamond_square_step(mat[med_y:len_y, med_x:len_x])
 
 mat
-#upper left
-x=5
-y=5
+#upper left: start with 9. Then change x and y to 5?
+mat[1:med_x, 1:med_y]<- diamond_step(mat[1:med_x, 1:med_y])
+mat[1:med_x, 1:med_y]<- square_step(mat[1:med_x, 1:med_y])
+mat[1:x, 1:y]
+x=3
+y=3
 med_x<- median(1:x)
 med_y<- median(1:y)
 mat[1:med_x, 1:med_y]<-diamond_square_step(mat[1:med_x, 1:med_y])
 mat
-mat1
-mat
-## need to change this so it copies back into the original mat1 should be  mat
+
 #upper right
+mat[1:med_x, med_y:len_y]<- diamond_step(mat[1:med_x, med_y:len_y]) #run the sequence with the initial x and y values for all the corners. THen to run all the smaller squares: need to change something with x and y. 
+mat[1:med_x, med_y:len_y]<- square_step(mat[1:med_x, med_y:len_y])
+#second lap
+mat[1:3, 7:9]<- diamond_step(mat[1:3, 7:len_y])
+mat[1:med_x, med_y:len_y]<- square_step(mat[1:med_x, med_y:len_y])
+#third lap
+mat[1:3, 5:7]<- diamond_step(mat[1:3, 5:7])
+mat[1:med_x, med_y:len_y]<- square_step(mat[1:med_x, med_y:len_y])
+#fourth lap
+mat[3:5, 7:9]<- diamond_step(mat[1:3, 7:len_y])
+mat[1:med_x, med_y:len_y]<- square_step(mat[1:med_x, med_y:len_y])
+#fifth lap
+mat[3:5, 5:7]<- diamond_step(mat[1:3, 5:7])
+mat[1:med_x, med_y:len_y]<- square_step(mat[1:med_x, med_y:len_y])
+
+
 x=5
 y=5
 med_x<- median(1:x)
@@ -133,16 +175,18 @@ med_x
 med_y<- median(1:y)
 med_y
 len_x<- ncol(mat)
-len_x
+len_x<-x
 len_y<- nrow(mat)
-mat2<- diamond_square_step(mat[1:med_x, med_y:len_y])
-mat[1:med_x, med_y:len_y]
-mat2
+len_y<-y
+mat[1:med_x, med_y:len_y]<- diamond_square_step(mat[1:med_x, med_y:len_y])
 mat
-#combine the two matrices
-m1_m2<-cbind(mat1, mat2)
 
+mat[1:3 ,7:9]<- diamond_square_step(mat[1:3, 7:9])
+mat
 #lower left matrice
+mat[med_y:len_y, 1:med_x]<- diamond_step(mat[med_y:len_y, 1:med_x])
+mat[med_y:len_y, 1:med_x]<- square_step(mat[med_y:len_y, 1:med_x])
+
 x=5
 y=5
 med_x<- median(1:x)
@@ -158,6 +202,9 @@ mat[1,1]
 mat[med_y:len_y, med_x:len_x]
 mat
 #lower right matrice
+mat[med_y:len_y, med_x:len_x]<- diamond_step(mat[med_y:len_y, med_x:len_x])
+mat[med_y:len_y, med_x:len_x]<- square_step(mat[med_y:len_y, med_x:len_x])
+
 x=5
 y=5
 med_x<- median(1:x)
