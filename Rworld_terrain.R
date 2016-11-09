@@ -5,14 +5,14 @@ mat_func<- function(x, y){
   mat<- matrix(ncol=x, nrow=y)
   return(mat)
 }
-mat<- mat_func(9,9)
-x<-9
-y<-9
+mat<- mat_func(5,5)
+x<-5
+y<-5
   #creating the corners of the matrix
-upl<- round(rnorm(1, mean=3), digits=2) #starting height for upper left
-upr<- round(rnorm(1, mean=3), digits=2) #starting height for upper right
-lol<- round(rnorm(1, mean=3), digits=2) #starting height for lower left
-lor<- round(rnorm(1, mean=3), digits=2) #starting height for lower right
+upl<- rnorm(1, mean=2) #starting height for upper left
+upr<- rnorm(1, mean=2) #starting height for upper right
+lol<- rnorm(1, mean=2) #starting height for lower left
+lor<- rnorm(1, mean=2) #starting height for lower right
 #adding the values to the matrix
 mat[1,1]<- upl #upper left
 mat[1,y]<- upr #upper right
@@ -88,12 +88,14 @@ for (i in ncol(mat)){
     mat[med_y:len_y, 1:med_x]<- square_step(mat[med_y:len_y, 1:med_x])
     mat[med_y:len_y, med_x:len_x]<- square_step(mat[med_y:len_y, med_x:len_x])
 }
-  for (i in rep(seq(from=1, to=(ncol(mat)-2), by=2), each=3)){
+  for (i in seq(from=1, to=(ncol(mat)-2), by=2)){
     mat[i:(i+2), i:(i+2)]<-diamond_step(mat[i:(i+2), i:(i+2)])
     mat[i:(i+2), i:(i+2)]<-square_step(mat[i:(i+2), i:(i+2)])
   }
   return(mat)
 }
+
+
 
 mat<-diamond_square_step(mat)
 mat
