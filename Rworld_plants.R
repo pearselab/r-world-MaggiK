@@ -77,7 +77,7 @@ survive <- function(cell, info, name){
   if (cell=='')
     return('')
   if(runif(1) <= info$survive[name])
-    return(info$survive[name])
+    return(name)
   if(runif(1) >= info$survive[name])
     return('')
 }
@@ -92,20 +92,20 @@ plants
 #this works if I define which survival rate to put into the function. So suvival needs to be attached to the plant?
 
 ###plant.timestep
-plant.timestep <- function(plants, terrain, info){
+plant.timestep <- function(plants, info){
   survive <- function(cell, info){
-    if(is.na(cell)) 
+    if(is.na(cell))
       return(NA)
     if (cell=='')
       return('')
-    if(runif(1) <= info$survive[plants])
-      return(plants)
-    #$The plant survived! so do something...
+    if(runif(1) <= info$survive[name])
+      return(name)
+    if(runif(1) >= info$survive[name])
+      return('')
   }
-    #$The plant survived! so do something...
-  for (i in seq_len(dim(plants)[3])){
+  for (i in 1:nrow(plants)){
     for (j in 1:ncol(plants)){
-    new.plants.matrix<- survive(j, info)
+    new.plants.matrix<- survive(plants[i,j], info)
     }
   }
   return(new.plants.matrix)
@@ -113,16 +113,30 @@ plant.timestep <- function(plants, terrain, info){
 
 plant.timestep(plants, terrain, info)
 
+for (i in 1:nrow(plants)){
+  for (j in 1:ncol(plants)){
+    new.plants.matrix<- survive(plants[i,j], info)
+  }
+plants[2,1,2]
 #how am I supposed to define the criteria in the second function? is new.plants.matrix the array? 
 
 ###run.plant.ecosystem
+run.plant.ecosystem<-function(terrain, timesteps, info){
+  plants <- array("", dim=c(dim(terrain),timesteps+1))
+  for(k in seq_len(dim(plants)[3]))
+    plants[,,k][is.na(terrain)] <- NA
+    for (k in seq_len(dim(plants)[3]))
+     plants[i,j,k]<- plant.timestep(plants[i,j,k], info)
+}
+run.plant.ecosystem(terrain, timesteps, info)
+
+
+
+
 #timesteps:assign a number
 timesteps<-3
 
-plants <- array("", dim=c(dim(terrain),timesteps+1))
-#...why timesteps+1, do you think?...
-for(i in seq_len(dim(plants)[3]))
-  plants[,,i][is.na(terrain)] <- NA
+
 
 #so the array of plants is storing the name of the plants?
 
