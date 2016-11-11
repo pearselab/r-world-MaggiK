@@ -71,7 +71,7 @@ info
 info$survive[]
 info$repro
 ###Suvival
-survive <- function(cell, info, name){
+survive <- function(cell, info){
   if(is.na(cell)) 
     return(NA)
   if (cell=='')
@@ -82,8 +82,8 @@ survive <- function(cell, info, name){
     return('')
 }
 
-plants[2,2,1]<-survive(terrain[2,2], info, "b")
-plants
+plants[3,3,1]<-survive(plants[3,3,1], info, "c")
+plants[,,1]
 
 #plant can be whatever you want
 
@@ -105,46 +105,45 @@ plant.timestep <- function(plants, info){
   }
   for (i in 1:nrow(plants)){
     for (j in 1:ncol(plants)){
-    new.plants.matrix<- survive(plants[i,j], info)
+      plants.matrix<- survive(plants[i,j], info)
     }
+    return(plants.matrix)
   }
-  return(new.plants.matrix)
 }
 
-plant.timestep(plants, terrain, info)
-
-for (i in 1:nrow(plants)){
-  for (j in 1:ncol(plants)){
-    new.plants.matrix<- survive(plants[i,j], info)
-  }
-plants[2,1,2]
+plant.timestep(plants, info)
+  
 #how am I supposed to define the criteria in the second function? is new.plants.matrix the array? 
-
-###run.plant.ecosystem
-run.plant.ecosystem<-function(terrain, timesteps, info){
-  plants <- array("", dim=c(dim(terrain),timesteps+1))
-  for(k in seq_len(dim(plants)[3]))
-    plants[,,k][is.na(terrain)] <- NA
-    for (k in seq_len(dim(plants)[3]))
-     plants[i,j,k]<- plant.timestep(plants[i,j,k], info)
-}
-run.plant.ecosystem(terrain, timesteps, info)
-
-
-
 
 #timesteps:assign a number
 timesteps<-3
 
+###run.plant.ecosystem
+run.plant.ecosystem<-function(terrain, timesteps, info){
+plants <- array("", dim=c(dim(terrain),timesteps+1))  
+  for(k in seq_len(dim(plants)[3]))
+    plants[,,k][is.na(terrain)] <- NA
+    plants[,,k]<- plant.timestep(plants[,,k], info)
+}
+run.plant.ecosystem(terrain, timesteps, info)
+plants
 
-
+pt <- array("", dim=c(dim(terrain),timesteps+1)) 
+for(k in seq_len(dim(pt)[3]))
+  pt[,,k][is.na(terrain)] <- NA
+  pt[,,k]<- plant.timestep(pt[,,k], info)
+pt
 #so the array of plants is storing the name of the plants?
 
 ###Reproduction
-plants <- reproduce(row, column, plants, info)
+plant <- reproduce(row, column, plants, info)
 
 reproduce <- function(row, col, plants, info){
   possible.locations <- as.matrix(expand.grid(row+c(-1,0,1), col+c(-1,0,1)))
+  for(k in seq_len(dim(plants)[3]))
+    plants[,,k][is.na(terrain)] <- NA
+  for (k in seq_len(dim(plants)[3]))
+    plants[,,k]<- plant.timestep(plants[i,j,], info)
   #...now filter out which ones are not water-logged and reproduce there...
   #...being careful to check you do have somewhere to reproduce to!...
   return(plants)
