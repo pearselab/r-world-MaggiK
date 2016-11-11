@@ -81,7 +81,7 @@ survive <- function(cell, info){
   if(runif(1) >= info$survive[name])
     return('')
 }
-
+names(info$survive)
 plants[3,3,1]<-survive(plants[3,3,1], info, "c")
 plants[,,1]
 
@@ -103,8 +103,9 @@ plant.timestep <- function(plants, info){
     if(runif(1) >= info$survive[name])
       return('')
   }
-  for (i in 1:nrow(plants)){
-    for (j in 1:ncol(plants)){
+  for (i in seq(1,nrow(plants),1)){
+    for (j in seq(1,ncol(plants),1)){
+      print(j)
       plants.matrix<- survive(plants[i,j], info)
     }
     return(plants.matrix)
@@ -122,6 +123,15 @@ timesteps<-3
 
 run.plant.ecosystem<-function(terrain, timesteps, info){
   plants <- array("", dim=c(dim(terrain),timesteps+1))
+  plants[1,1,1]<- "a"
+  plants[1,2,1]<-"b"
+  plants[1,3,1]<-""
+  plants[2,1,1]<-"a"
+  plants[2,2,1]<-""
+  plants[2,3,1]<-"b"
+  plants[3,3,1]<-""
+  plants[3,2,1]<-"c"
+  plants[3,1,1]<-"a"
   for(k in seq_len(dim(plants)[3]))
     plants[,,k][is.na(terrain)] <- NA
     plants[,,k]<- plant.timestep(plants[,,k], info)
@@ -130,11 +140,37 @@ return(plants)
 run.plant.ecosystem(terrain, timesteps, info)
 plants
 
-pt <- array("", dim=c(dim(terrain),timesteps+1)) 
+
+pt<- array("", dim=c(dim(terrain),timesteps+1)) 
+pt[1,1,1]<- "a"
+pt[1,2,1]<-"b"
+pt[1,3,1]<-""
+pt[2,1,1]<-"a"
+pt[2,2,1]<-""
+pt[2,3,1]<-"b"
+pt[3,3,1]<-""
+pt[3,2,1]<-"c"
+pt[3,1,1]<-"a"
+pt<- matrix("",nrow=3, ncol=3)
+pt[,][is.na(terrain)]<-NA
+for(i in 1:nrow(pt)){
+  plants.matrix<-survive(pt[3,1],info)
+  return(plants.matrix)
+}
+
 for(k in seq_len(dim(pt)[3]))
   pt[,,k][is.na(terrain)] <- NA
-  pt[,,k]<- plant.timestep(pt[,,k], info)
+  pt[,,k]<- plant.timestep(plants[,,k], info)
+plants
+
+for (i in 1:nrow(pt)){
+    print(i)
+    plants.matrix[i,1]<- survive(pt[i,1], info)
+    return(plants.matrix)
+  }
+  
 pt
+
 #so the array of plants is storing the name of the plants?
 
 ###Reproduction
