@@ -119,12 +119,14 @@ plant.timestep(plants, info)
 timesteps<-3
 
 ###run.plant.ecosystem
+
 run.plant.ecosystem<-function(terrain, timesteps, info){
-plants <- array("", dim=c(dim(terrain),timesteps+1))  
+  plants <- array("", dim=c(dim(terrain),timesteps+1))
   for(k in seq_len(dim(plants)[3]))
     plants[,,k][is.na(terrain)] <- NA
     plants[,,k]<- plant.timestep(plants[,,k], info)
-}
+return(plants)
+    }
 run.plant.ecosystem(terrain, timesteps, info)
 plants
 
