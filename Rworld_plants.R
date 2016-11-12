@@ -12,6 +12,11 @@
 #repro: vector that is the same length of the matrix (each one needs a reproduction prob 0-1)
 #comp.mat:matrix of spp. number of rows or columns reflects the number of species
 
+##making a matrix
+mat_func<- function(x, y){
+  mat<- matrix(ncol=x, nrow=y)
+  return(mat)
+}
 ##terrain matrix
 terrain<- mat_func(3,3)
 terrain[1,1]<-NA
@@ -25,11 +30,7 @@ terrain[3,2]<-4.4
 terrain[3,1]<-1.8
 terrain
 
-##making a comp.matrix
-mat_func<- function(x, y){
-  mat<- matrix(ncol=x, nrow=y)
-  return(mat)
-}
+
 c_mat<- mat_func(3,3)
 c_mat[1,1]<-.5
 c_mat[1,2]<-.2
@@ -50,7 +51,10 @@ repr
 surv<-c(.2,.5,.6)
 
 #names
-nm<-c("a","b","c")
+names<-c("a","b","c")
+rownames(c_mat)<-names
+colnames(c_mat)<-names
+
 ###checking life history parameters
 setup.plants <- function(repro, survive, comp.mat, name=NULL){
   if(is.null(name))
@@ -64,65 +68,28 @@ setup.plants <- function(repro, survive, comp.mat, name=NULL){
   repro <- setNames(repro, name)
   survive<- setNames(survive, name)
   return(list(repro=repro, survive=survive, comp.mat=comp.mat,
-              name=name))
+              names=names))
 }
 info<-setup.plants(repr, surv, c_mat)
 info
-info$survive[]
-info$repro
+
 ###Suvival
 survive <- function(cell, info){
   if(is.na(cell)) 
     return(NA)
   if (cell=='')
     return('')
-  if(runif(1) <= info$survive[name])
-    return(name)
-  if(runif(1) >= info$survive[name])
+  if(runif(1) <= info$survive[cell])
+    return(cell)
+  if(runif(1) >= info$survive[cell])
     return('')
 }
-names(info$survive)
-plants[3,3,1]<-survive(plants[3,3,1], info, "c")
-plants[,,1]
-
-#plant can be whatever you want
-
-
-#how does it know survival is attached to that specific plant? Am I supposed to store the survival rate of the plant or the plant name?
-#this works if I define which survival rate to put into the function. So suvival needs to be attached to the plant?
-
-###plant.timestep
-plant.timestep <- function(plants, info){
-  survive <- function(cell, info){
-    if(is.na(cell))
-      return(NA)
-    if (cell=='')
-      return('')
-    if(runif(1) <= info$survive[name])
-      return(name)
-    if(runif(1) >= info$survive[name])
-      return('')
-  }
-  for (i in seq(1,nrow(plants),1)){
-    for (j in seq(1,ncol(plants),1)){
-      print(j)
-      plants.matrix<- survive(plants[i,j], info)
-    }
-    return(plants.matrix)
-  }
-}
-
-plant.timestep(plants, info)
-  
-#how am I supposed to define the criteria in the second function? is new.plants.matrix the array? 
 
 #timesteps:assign a number
 timesteps<-3
-
-###run.plant.ecosystem
-
-run.plant.ecosystem<-function(terrain, timesteps, info){
-  plants <- array("", dim=c(dim(terrain),timesteps+1))
+#setupmy array
+plants <- array("", dim=c(dim(terrain),timesteps+1))
+  #seeding the first part of the array
   plants[1,1,1]<- "a"
   plants[1,2,1]<-"b"
   plants[1,3,1]<-""
@@ -132,57 +99,81 @@ run.plant.ecosystem<-function(terrain, timesteps, info){
   plants[3,3,1]<-""
   plants[3,2,1]<-"c"
   plants[3,1,1]<-"a"
+#setting the NA's
+for(k in seq_len(dim(plants)[3]))
+    plants[,,k][is.na(terrain)] <- NA
+  
+###plant.timestep
+plant.timestep <- function(plants, info){
+  survive <- function(cell, info){
+    if(is.na(cell))
+      return(NA)
+    if (cell=='')
+      return('')
+    if(runif(1) <= info$survive[cell])
+      return(cell)
+    if(runif(1) >= info$survive[cell])
+      return('')
+  }
+  #the timestep: k dimensions, i rows, and j columns
+  for (k in 1:(dim(plants)[3]-1)){
+    for (i in 1:(dim(plants)[1])){
+      for (j in 1:(dim(plants)[2])){
+           plants[i,j,(k+1)]<- survive(plants[i,j,k], info)
+     }
+    }
+  }
+  return(plants[,,k])
+  }
+
+plant.timestep(plants, info)
+plants 
+
+
+
+###run.plant.ecosystem
+run.plant.ecosystem<-function(plants, info, timesteps){
+  plants <- array("", dim=c(dim(terrain),timesteps+1))
+  #seeding the first part of the array
+  plants[1,1,1]<- "a"
+  plants[1,2,1]<-"b"
+  plants[1,3,1]<-""
+  plants[2,1,1]<-"a"
+  plants[2,2,1]<-""
+  plants[2,3,1]<-"b"
+  plants[3,3,1]<-""
+  plants[3,2,1]<-"c"
+  plants[3,1,1]<-"a"
+  #setting the NA's
   for(k in seq_len(dim(plants)[3]))
     plants[,,k][is.na(terrain)] <- NA
-    plants[,,k]<- plant.timestep(plants[,,k], info)
-return(plants)
-    }
-run.plant.ecosystem(terrain, timesteps, info)
-plants
-
-
-pt<- array("", dim=c(dim(terrain),timesteps+1)) 
-pt[1,1,1]<- "a"
-pt[1,2,1]<-"b"
-pt[1,3,1]<-""
-pt[2,1,1]<-"a"
-pt[2,2,1]<-""
-pt[2,3,1]<-"b"
-pt[3,3,1]<-""
-pt[3,2,1]<-"c"
-pt[3,1,1]<-"a"
-pt<- matrix("",nrow=3, ncol=3)
-pt[,][is.na(terrain)]<-NA
-for(i in 1:nrow(pt)){
-  plants.matrix<-survive(pt[3,1],info)
-  return(plants.matrix)
+  plants<- plant.timestep(plants, info)
+  return(plants)
 }
-
-for(k in seq_len(dim(pt)[3]))
-  pt[,,k][is.na(terrain)] <- NA
-  pt[,,k]<- plant.timestep(plants[,,k], info)
-plants
-
-for (i in 1:nrow(pt)){
-    print(i)
-    plants.matrix[i,1]<- survive(pt[i,1], info)
-    return(plants.matrix)
-  }
-  
-pt
-
-#so the array of plants is storing the name of the plants?
+run.plant.ecosystem(plants, info, 3)
 
 ###Reproduction
-plant <- reproduce(row, column, plants, info)
 
 reproduce <- function(row, col, plants, info){
   possible.locations <- as.matrix(expand.grid(row+c(-1,0,1), col+c(-1,0,1)))
-  for(k in seq_len(dim(plants)[3]))
-    plants[,,k][is.na(terrain)] <- NA
-  for (k in seq_len(dim(plants)[3]))
-    plants[,,k]<- plant.timestep(plants[i,j,], info)
-  #...now filter out which ones are not water-logged and reproduce there...
-  #...being careful to check you do have somewhere to reproduce to!...
+  #figure out the locations in i rows, and j col
+  for (i in possible.locations){
+    for(j in possible.locations){
+      #if it is not NA pick a plant to reproduce given the reporduction probability
+      if(!is.na(possible.locations)){
+        if(runif(1)<= info$reproduce[plant]){
+          plants[i,j]<- info$names[plants]
+        }
+      }
+    }
+  }
   return(plants)
 }
+  #...now filter out which ones are not water-logged and reproduce there...
+  #...being careful to check you do have somewhere to reproduce to!...
+
+plants <- reproduce(row, column, plants, info)
+
+###Competition
+sample(species_names, 1, prob=comp.mat[row,column])
+
