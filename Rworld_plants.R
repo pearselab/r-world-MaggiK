@@ -119,17 +119,17 @@ plant.timestep <- function(plants, info){
   for (k in 1:(dim(plants)[3]-1)){
     for (i in 1:(dim(plants)[1])){
       for (j in 1:(dim(plants)[2])){
-           plants[i,j,(k+1)]<- survive(plants[i,j,k], info)
+           plants[i,j, (k+1)]<- survive(plants[i,j,k], info)
      }
     }
   }
-  return(plants[,,k])
+  return(plants[i,j,k])
   }
 
 plant.timestep(plants, info)
 plants 
 
-
+dim(plants)
 
 ###run.plant.ecosystem
 run.plant.ecosystem<-function(plants, info, timesteps){
@@ -153,17 +153,18 @@ run.plant.ecosystem<-function(plants, info, timesteps){
 run.plant.ecosystem(plants, info, 3)
 
 ###Reproduction
-
+## I don't understand this section.I can't conceptualize this. 
 reproduce <- function(row, col, plants, info){
-  possible.locations <- as.matrix(expand.grid(row+c(-1,0,1), col+c(-1,0,1)))
+  possible.locations <- as.matrix(expand.grid(row+c(-1,0,1), col+c(-1,0,1))) #this code doesn't work. I don't even know what it is supposed to do
   #figure out the locations in i rows, and j col
-  for (i in possible.locations){
-    for(j in possible.locations){
+  for (i in 1:ncol(possible.locations){
+    for (j in 1:nrow(possible.locations){
       #if it is not NA pick a plant to reproduce given the reporduction probability
-      if(!is.na(possible.locations)){
-        if(runif(1)<= info$reproduce[plant]){
+      if (plants[,,k][!is.na(possible.locations))]{
+        if(runif(1)<= info$reproduce[plants]){
           plants[i,j]<- info$names[plants]
         }
+      }
       }
     }
   }
