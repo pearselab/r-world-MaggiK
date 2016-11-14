@@ -123,9 +123,9 @@ plant.timestep <- function(plants, info){
      }
     }
   }
-  return(plants[i,j,k])
+  return(plants)
   }
-
+info
 plant.timestep(plants, info)
 plants 
 
