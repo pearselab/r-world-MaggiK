@@ -7,7 +7,7 @@
 #reproduce->disperse 
 
 #repro(based on number spp), suvive (0-1), comp.mat(matrix if you have 3 spp, then 3 rows and 3 col)
-
+rm(list=ls())
 #survive: is probability (0-1)
 #repro: vector that is the same length of the matrix (each one needs a reproduction prob 0-1)
 #comp.mat:matrix of spp. number of rows or columns reflects the number of species
@@ -44,7 +44,7 @@ c_mat[3,1]<-.8
 c_mat
 
 #repro
-repr<- c(.3,.6,.8)
+repr<- c(.3,.8,.9)
 repr
 
 #survival
@@ -75,8 +75,8 @@ info
 
 ###Suvival
 survive <- function(cell, info){
-  if(is.na(cell)) 
-    return(NA)
+  if (is.na(cell)){ cell<- NA
+    }else{
   if (cell=='')
     return('')
   if(runif(1) <= info$survive[cell])
@@ -106,30 +106,36 @@ for(k in seq_len(dim(plants)[3]))
 ###plant.timestep
 plant.timestep <- function(plants, info){
   survive <- function(cell, info){
-    if(is.na(cell))
-      return(NA)
+    if (is.na(cell)){ cell<- NA
+    }else{
     if (cell=='')
       return('')
     if(runif(1) <= info$survive[cell])
       return(cell)
     if(runif(1) >= info$survive[cell])
       return('')
+    }
   }
   #the timestep: k dimensions, i rows, and j columns
   for (k in 1:(dim(plants)[3]-1)){
     for (i in 1:(dim(plants)[1])){
       for (j in 1:(dim(plants)[2])){
-           plants[i,j, (k+1)]<- survive(plants[i,j,k], info)
+        please_work <- survive(plants[i,j,k], info)
+        plants[i,j,(k+1)] <- please_work
      }
     }
+    return(plants)
   }
-  return(plants)
-  }
+}
+
 info
-plant.timestep(plants, info)
+plants<-plant.timestep(plants, info)
 plants 
 
 dim(plants)
+i
+j
+k
 
 ###run.plant.ecosystem
 run.plant.ecosystem<-function(plants, info, timesteps){
@@ -147,32 +153,27 @@ run.plant.ecosystem<-function(plants, info, timesteps){
   #setting the NA's
   for(k in seq_len(dim(plants)[3]))
     plants[,,k][is.na(terrain)] <- NA
+  #run plant.timestep
   plants<- plant.timestep(plants, info)
   return(plants)
 }
 run.plant.ecosystem(plants, info, 3)
 
 ###Reproduction
-## I don't understand this section.I can't conceptualize this. 
 reproduce <- function(row, col, plants, info){
-  possible.locations <- as.matrix(expand.grid(row+c(-1,0,1), col+c(-1,0,1))) #this code doesn't work. I don't even know what it is supposed to do
-  #figure out the locations in i rows, and j col
-  for (i in 1:ncol(possible.locations){
-    for (j in 1:nrow(possible.locations){
-      #if it is not NA pick a plant to reproduce given the reporduction probability
-      if (plants[,,k][!is.na(possible.locations))]{
-        if(runif(1)<= info$reproduce[plants]){
-          plants[i,j]<- info$names[plants]
-        }
-      }
-      }
+  for (loc in 1:nrow(possible.locations)){
+    possible.locations<- as.matrix(expand.grid(row+c(-1,0,1), col+c(-1,0,1))) 
+    x<- possible.locations[loc,1]
+    y<- possible.locations[loc,2]
+    if(!is.na(plants[row, col, k]) && (loc < ncol(plants))){
+      if(!is.na(runif(1)<= info$repr[plants[row, col, k]])){
+        plants[x, y, (k+1)]<- plants[row,col, k]
+        return(plants)
+      } 
     }
   }
-  return(plants)
 }
-  #...now filter out which ones are not water-logged and reproduce there...
-  #...being careful to check you do have somewhere to reproduce to!...
-
+ 
 plants <- reproduce(row, column, plants, info)
 
 ###Competition
