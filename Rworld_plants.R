@@ -3,8 +3,8 @@
 ##11/07/2016
 ##use an array/matrix (wrapper for psecies properties)
 #for loop involved in survival steps.
-#survive or die 
-#reproduce->disperse 
+#survive or die
+#reproduce->disperse
 
 #repro(based on number spp), suvive (0-1), comp.mat(matrix if you have 3 spp, then 3 rows and 3 col)
 rm(list=ls())
@@ -75,16 +75,17 @@ info
 
 ###Suvival
 survive <- function(cell, info){
+  r<- runif(1)
   if (is.na(cell)){ cell<- NA
     }else{
   if (cell=='')
     return('')
-  if(runif(1) <= info$survive[cell])
+  if(r <= info$survive[cell])
     return(cell)
-  if(runif(1) >= info$survive[cell])
+  if(r >= info$survive[cell])
     return('')
 }
-
+}
 #timesteps:assign a number
 timesteps<-3
 #setupmy array
@@ -102,18 +103,21 @@ plants <- array("", dim=c(dim(terrain),timesteps+1))
 #setting the NA's
 for(k in seq_len(dim(plants)[3]))
     plants[,,k][is.na(terrain)] <- NA
-  
+
 ###plant.timestep
 plant.timestep <- function(plants, info){
   survive <- function(cell, info){
+    r<- runif(1)
     if (is.na(cell)){ cell<- NA
     }else{
-    if (cell=='')
-      return('')
-    if(runif(1) <= info$survive[cell])
-      return(cell)
-    if(runif(1) >= info$survive[cell])
-      return('')
+      if (cell==''){
+        return('')
+      }else{
+      if(r <= info$survive[cell])
+        return(cell)
+      if(r >= info$survive[cell])
+        return('')
+      }
     }
   }
   #the timestep: k dimensions, i rows, and j columns
@@ -122,21 +126,43 @@ plant.timestep <- function(plants, info){
       for (j in 1:(dim(plants)[2])){
         please_work <- survive(plants[i,j,k], info)
         plants[i,j,(k+1)] <- please_work
-     }
+      }
+    }
+    for (i in 1:(dim(plants)[1])){
+      for (j in 1:(dim(plants)[2])){
+        plants<- reproduce(i, j, plants, info, k)
+        print(plants)
+      }
     }
     return(plants)
   }
-}
+     }
+
+
 
 info
-plants<-plant.timestep(plants, info)
-plants 
+plant.timestep(plants, info)
+plants
 
-dim(plants)
 i
 j
 k
 
+for (k in 1:(dim(plants)[3]-1)){
+   for (i in 1:(dim(plants)[1])){
+     for (j in 1:(dim(plants)[2])){
+       please_work <- survive(plants[i,j,k], info)
+       plants[i,j,(k+1)] <- please_work
+     }
+   }
+  for (i in 1:(dim(plants)[1])){
+    for (j in 1:(dim(plants)[2])){
+      plants<- reproduce(i, j, plants, info, k)
+    }
+  }
+}
+ plants
+#ok so this works! just with  survive...
 ###run.plant.ecosystem
 run.plant.ecosystem<-function(plants, info, timesteps){
   plants <- array("", dim=c(dim(terrain),timesteps+1))
@@ -159,21 +185,28 @@ run.plant.ecosystem<-function(plants, info, timesteps){
 }
 run.plant.ecosystem(plants, info, 3)
 
-###Reproduction
-reproduce <- function(row, col, plants, info){
+###Reproduction- So a row and col is i an j.
+reproduce <- function(row, col, plants, info, k){
+  possible.locations<- as.matrix(expand.grid(row+c(-1,0,1), col+c(-1,0,1)))
   for (loc in 1:nrow(possible.locations)){
-    possible.locations<- as.matrix(expand.grid(row+c(-1,0,1), col+c(-1,0,1))) 
     x<- possible.locations[loc,1]
     y<- possible.locations[loc,2]
-    if(!is.na(plants[row, col, k]) && (loc < ncol(plants))){
+    if(!is.na(plants[row, col, k]) || !is.na(loc < ncol(plants))){
       if(!is.na(runif(1)<= info$repr[plants[row, col, k]])){
-        plants[x, y, (k+1)]<- plants[row,col, k]
-        return(plants)
-      } 
+       tmp <- plants[row,col, k]
+       plants[x, y, (k+1)] <- tmp
+      }
     }
+    return(plants)
   }
 }
- 
+reproduce(1, 2, plants, info, 2)
+
+plants
+
+info$repro[plants[2,1,1]]
+plants[2,1,1]
+
 plants <- reproduce(row, column, plants, info)
 
 ###Competition
