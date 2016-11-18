@@ -4,19 +4,26 @@
 \alias{run.plant.ecosystem}
 \title{this is the run.plant.ecosystem wrapper for plant.timestep}
 \usage{
-run.plant.ecosystem(plants, info, timesteps, repr, surv, c_mat)
+run.plant.ecosystem(timesteps, repr, surv, c_mat, terrain)
 }
 \arguments{
-\item{plants}{is the plants array}
+\item{timesteps}{is the number of timestpes}
 
-\item{info}{from the setup.plants}
+\item{terrain}{is the matrix of terrain}
 
-\item{is}{the number of timestpes}
+\item{repro}{is the probability of reproduction created above}
+
+\item{survival}{is the probability of surviving created above}
+
+\item{comp.mat}{is the competition matrix created above}
 }
 \value{
 matrix of results
 }
 \description{
 this is the run.plant.ecosystem wrapper for plant.timestep
+}
+\author{
+Maggi Kraft
 }
 

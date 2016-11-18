@@ -5,18 +5,12 @@
 #for loop involved in survival steps.
 #survive or die
 #reproduce->disperse
-#' Rworld plants.
-#'
-#' @author Maggi Kraft
-#' @description  This uses a survive function and reproduction function to populate an array
-#'    It uses five functions.
-#'    First the mat_function to create a matrix
-#'    second is the setup plants function. This checks and sets up the input data for the rest of the function
-#'    third is the survival function. This is used to determine the probablity of surviving to the next timestep
-#'    fourth is the reproduction function. This is the probability of reproducing in through time
-#'    fifth is the main function. This is the timestep function that includes the survival and reproduction
-#'
-#'
+#I received help from numerous people to do this assignment: Mallory, Jocelyn, Alex, Paul, Will, Carol and everyone else that I asked random questions in class.
+#' @title
+#' Rworld plants for Programming for Biologists fall of 2016.
+#
+#' @author Maggi Kraft maggi.kraft@aggiemail.usu.edu
+#' @description This uses a survive function and reproduction function to populate an array It uses five functions. First the mat_function to create a matrix. Second is the setup plants function. This checks and sets up the input data for the rest of the function. Third is the survival function. This is used to determine the probablity of surviving to the next timestep. Fourth is the reproduction function. This is the probability of reproducing in through time. Fifth is the main function. This is the timestep function that includes the survival and reproduction. The maintainer for this is Maggi Kraft: maggi.kraft@aggiemail.usu.edu.
 #' The input data is as follows:
 #' repro(based on number spp):vector that is the same length of the matrix (each one needs a reproduction prob 0-1)
 #' suvive (0-1): probability of surving to the next timestep
@@ -24,7 +18,7 @@
 #' survive: is probability (0-1)
 #' comp.mat (competition matrix):matrix of spp. number of rows or columns reflects the number of species
 
-#creating the input data
+#creating the input data so I can test the functions
 ##making a matrix
 # mat_func<- function(x, y){
 #   mat<- matrix(ncol=x, nrow=y)
@@ -43,7 +37,7 @@
 # terrain[3,1]<-1.8
 # terrain
 #
-#
+# c_mat<- matrix(3,3)
 # c_mat<- mat_func(3,3)
 # c_mat[1,1]<-.5
 # c_mat[1,2]<-.2
@@ -68,10 +62,10 @@
 # rownames(c_mat)<-names
 # colnames(c_mat)<-names
 
-#' @param repro is the probability of reproduction created above
-#' @param survival is the probability of surviving created above
-#' @param comp.mat is the competition matrix created above
-#' @return info which contains all the info/input data
+#@param repro is the probability of reproduction created above
+#@param survival is the probability of surviving created above
+#@param comp.mat is the competition matrix created above
+#@return info which contains all the info/input data
 #'
 ###checking life history parameters
 setup.plants <- function(repro, survive, comp.mat, name=NULL){
@@ -90,10 +84,10 @@ setup.plants <- function(repro, survive, comp.mat, name=NULL){
 }
 
 
-#' @param cell is a specific cell
-#' @param info the output from setup.plants
-#' @return whether a plant survives
-#' @export
+#@param cell is a specific cell
+#@param info the output from setup.plants
+#@return whether a plant survives
+#@export
 ###Suvival
 survive <- function(cell, info){
   r<- runif(1)
@@ -108,13 +102,14 @@ survive <- function(cell, info){
 }
 }
 
-#' @param row: the specific row  a plant can reproduce to
-#' @param col: the specific col a plant can reproduce to
-#' @param plants: the plants array created in the run.ecosystem
-#' @param info: the info/input data created in setup.plants
-#' @param k: the dimesions/number of timesteps
-#' @return whether the plants reproduce
+#@param row: the specific row  a plant can reproduce to
+#@param col: the specific col a plant can reproduce to
+#@param plants: the plants array created in the run.ecosystem
+#@param info: the info/input data created in setup.plants
+#@param k: the dimesions/number of timesteps
+#@return whether the plants reproduce
 ###Reproduction- So a row and col is i an j.
+#Alex told me what the rows and col represent and what expand.grid is doing. I had help from a friend outside the class for most of this.
 reproduce <- function(row, col, plants, info, k){
   possible.locations<- as.matrix(expand.grid(row+c(-1,0,1), col+c(-1,0,1)))
   for (loc in 1:nrow(possible.locations)){
@@ -136,12 +131,13 @@ reproduce <- function(row, col, plants, info, k){
   return(plants)
 }
 
-#' This function steps through time
-#' @param plants is the plants array
-#' @param info the output from setup.plants functions
-#' @return the matrix of results
-#'
+#This function steps through time
+#@param plants is the plants array
+#@param info the output from setup.plants functions
+#@return the matrix of results
+
 ###plant.timestep
+#I worked on this with Mallory, and Jocelyn a bunch. I also asked Alex numerous questions.
 plant.timestep <- function(plants, info){
   survive <- function(cell, info){
     r<- runif(1)
@@ -166,6 +162,7 @@ plant.timestep <- function(plants, info){
         print(k)
       }
     }
+    # the second loop for reproduce- because in each timestep the plant can survive and reproduce before moving onto the next dimension.
     for (i in 1:(dim(plants)[1])){
       for (j in 1:(dim(plants)[2])){
         plants<- reproduce(i, j, plants, info, k)
@@ -177,13 +174,19 @@ plant.timestep <- function(plants, info){
 
 
 #' this is the run.plant.ecosystem wrapper for plant.timestep
-#' @param plants is the plants array
-#' @param info from the setup.plants
-#' @param is the number of timestpes
+#'
+#' @author Maggi Kraft
+#' @param timesteps is the number of timestpes
+#' @param repro is the probability of reproduction created above
+#' @param survival is the probability of surviving created above
+#' @param comp.mat is the competition matrix created above
+#' @param terrain is the matrix of terrain
 #' @return matrix of results
-#' @export
+#The documentation for the example doesn't work. The user needs to specifcy the information. But I am not sure how to change it so that roxygen will read this.
+#' @example
+#' plant_array <- run.plant.ecosystem(timestepsM<-3, repro<-c(.3,.8,.9), surv<-c(.2,.5,.6), c_mat<-(matrix(3,3), c_mat[1,1]<-.5, c_mat[1,2]<-.2, c_mat[1,3]<-.4, c_mat[2,1]<-.6, c_mat[2,2]<-.5, c_mat[2,3]<-.3, c_mat[3,3]<-.5, c_mat[3,2]<-.4, c_mat[3,1]<-.8), terrain=my_terrain)
 ###run.plant.ecosystem
-run.plant.ecosystem<-function(plants, info, timesteps, repr, surv, c_mat){
+run.plant.ecosystem<-function(timesteps, repr, surv, c_mat, terrain){
   info<- info<-setup.plants(repr, surv, c_mat)
   plants <- array("", dim=c(dim(terrain),timesteps+1))
   #seeding the first part of the array
@@ -208,5 +211,6 @@ run.plant.ecosystem<-function(plants, info, timesteps, repr, surv, c_mat){
 
 
 ###Competition
+#right now I have no competition. If there is a plant there it can't move there.
 #sample(species_names, 1, prob=comp.mat[row,column])
 

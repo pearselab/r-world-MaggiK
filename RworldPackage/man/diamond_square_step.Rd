@@ -6,14 +6,6 @@
 \usage{
 diamond_square_step(x, y)
 }
-\arguments{
-\item{x}{=number col}
-
-\item{and}{y= rows}
-}
-\value{
-diamond_square_step
-}
 \description{
 Diamond_square_step combines the diamond and square step functions
 }

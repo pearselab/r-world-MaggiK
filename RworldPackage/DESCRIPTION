@@ -5,7 +5,8 @@ Version: 0.1
 Date: 2016-11-17
 Author: Maggi Kraft
 Maintainer: maggi.kraft@aggiemail.usu.edu
-Description: creates a matrix of terrain and uses the matrix and input data to determine if plants survive or reproduce
+Description: creates a matrix of terrain and uses the matrix and input data to determine if plants survive or reproduce.
 License: What license is it under?
 LazyData: TRUE
 RoxygenNote: 5.0.1
+

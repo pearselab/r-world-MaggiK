@@ -17,4 +17,8 @@ image of the terrain
 \description{
 wrapper function: make.terrain is a wrapper for diamond_square_step(mat, x, y). Change negative numbers to NA to represent water. The output is an image.
 }
+\examples{
+my_terrain<- make.terrain(5, 5)
+
+}
 

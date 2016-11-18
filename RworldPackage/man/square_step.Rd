@@ -6,9 +6,6 @@
 \usage{
 square_step(mat)
 }
-\arguments{
-\item{mat}{is the only input. mat is the matrix created in the matrix function}
-}
 \description{
 This is the square step function
 }

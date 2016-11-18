@@ -1,19 +1,21 @@
 ###Rworld terrain exercise
 #creating an empty matrix
-#' Rworld terrain.
+#I received help from numerous people to do this assignment: Mallory, Jocelyn, Alex, Paul, Will and everyone else that I asked random questions throughout the day in class.
+#' @title Rworld terrain.
 #'
 #' @author Maggi Kraft
-#' @description This code makes an elevational grid with negative numbers as lakes/water. This matrix code only works with matrices of size 5x5 and 9x9. Don't do it any other size matrix. This code was created for the programming for biologists course in fall of 2016.
-#'
-#'  It uses three-ish functions.
-#'    First the mat_function to create a matrix with corners filled in
-#'    second the diamond step function
-#'    third the square step function
-#'    fourth the wrapper for everything
-#'
-#' @param x is number of columns
-#' @param y is number of rows
-#' @return a matrix
+#' @description This code makes an elevational grid with negative numbers as lakes/water. This matrix code only works with matrices of size 5x5 and 9x9. Don't do it any other size matrix. This code was created for the programming for biologists course in fall of 2016. Maintainer is maggi.kraft@aggiemail.usu.edu
+#
+#
+#' It uses four functions.
+#' First the mat_function to create a matrix with corners filled in
+#' second the diamond step function
+#' third the square step function
+#' fourth the wrapper for everything
+#
+#@param x is number of columns
+#@param y is number of rows
+#@return a matrix
 
 #create a matrix with x rows and y columns
 mat_func<- function(x, y){
@@ -30,9 +32,9 @@ mat_func<- function(x, y){
   return(mat)
 }
 
-#' This is the diamond step portion
-#' @param mat or matrix created above is the first parameter
-#' @return diamond step function
+#This is the diamond step portion
+#@param mat or matrix created above is the first parameter
+#@return diamond step function
 ###Diamond Step:
 #creating the center point. This is a function of the matrix.
 diamond_step<-function(mat){
@@ -53,7 +55,7 @@ diamond_step<-function(mat){
 }
 
 #' This is the square step function
-#' @param mat is the only input. mat is the matrix created in the matrix function
+#@param mat is the only input. mat is the matrix created in the matrix function
 
 ####Square.Step: creating the side points
 square_step<-function(mat){
@@ -79,9 +81,10 @@ square_step<-function(mat){
 
 ##Creating the diamond_square_step: Function calls the two above functions and repeats them for each smaller square.
 #' Diamond_square_step combines the diamond and square step functions
-#' @param  x =number col
-#' @param and y= rows
-#' @return diamond_square_step
+#'
+#@param  x =number col
+#@param  y= rows
+#@return diamond_square_step
 diamond_square_step<- function(x,y){
   mat<- mat_func(x,y)
   mat<-diamond_step(mat)
@@ -100,6 +103,7 @@ diamond_square_step<- function(x,y){
     mat[med_y:len_y, 1:med_x]<- square_step(mat[med_y:len_y, 1:med_x])
     mat[med_y:len_y, med_x:len_x]<- square_step(mat[med_y:len_y, med_x:len_x])
   }
+#this looks at the sequence from 1 to the number of columns in the matrix -2. It really is meant to finish the 3x3 matrices of the larger matrices. Adjusting the sequence will probably allow me to run this instead of the method I did above.
   for (i in seq(from=1, to=(ncol(mat)-2), by=2)){
     mat[i:(i+2), i:(i+2)]<-diamond_step(mat[i:(i+2), i:(i+2)])
     mat[i:(i+2), i:(i+2)]<-square_step(mat[i:(i+2), i:(i+2)])
@@ -113,14 +117,17 @@ diamond_square_step<- function(x,y){
 
 ###wrapper function
 #' wrapper function: make.terrain is a wrapper for diamond_square_step(mat, x, y). Change negative numbers to NA to represent water. The output is an image.
+#'
 #' @param x is the number of columns in the matrix
 #' @param y is the number of rows in the matrix
 #' @return image of the terrain
-#' @export
+#' @examples my_terrain<- make.terrain(5, 5)
+#'
+
 make.terrain<- function(x, y){
   mat<- diamond_square_step(x, y)
   mat[mat<0] <- NA
   image(mat)
 }
-make.terrain(9, 9)
+
 

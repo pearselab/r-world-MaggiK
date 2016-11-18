@@ -2,30 +2,12 @@
 % Please edit documentation in R/Rworld_plants_package.R
 \name{setup.plants}
 \alias{setup.plants}
-\title{Rworld plants.}
+\title{Rworld plants for Programming for Biologists fall of 2016.}
 \usage{
 setup.plants(repro, survive, comp.mat, name = NULL)
 }
-\arguments{
-\item{repro}{is the probability of reproduction created above}
-
-\item{comp.mat}{is the competition matrix created above}
-
-\item{survival}{is the probability of surviving created above}
-}
-\value{
-info which contains all the info/input data
-}
 \description{
-This uses a survive function and reproduction function to populate an array
-   It uses five functions.
-   First the mat_function to create a matrix
-   second is the setup plants function. This checks and sets up the input data for the rest of the function
-   third is the survival function. This is used to determine the probablity of surviving to the next timestep
-   fourth is the reproduction function. This is the probability of reproducing in through time
-   fifth is the main function. This is the timestep function that includes the survival and reproduction
-
-
+This uses a survive function and reproduction function to populate an array It uses five functions. First the mat_function to create a matrix. Second is the setup plants function. This checks and sets up the input data for the rest of the function. Third is the survival function. This is used to determine the probablity of surviving to the next timestep. Fourth is the reproduction function. This is the probability of reproducing in through time. Fifth is the main function. This is the timestep function that includes the survival and reproduction. The maintainer for this is Maggi Kraft: maggi.kraft@aggiemail.usu.edu.
 The input data is as follows:
 repro(based on number spp):vector that is the same length of the matrix (each one needs a reproduction prob 0-1)
 suvive (0-1): probability of surving to the next timestep
@@ -34,6 +16,6 @@ survive: is probability (0-1)
 comp.mat (competition matrix):matrix of spp. number of rows or columns reflects the number of species
 }
 \author{
-Maggi Kraft
+Maggi Kraft maggi.kraft@aggiemail.usu.edu
 }
 

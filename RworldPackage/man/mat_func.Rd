@@ -6,22 +6,13 @@
 \usage{
 mat_func(x, y)
 }
-\arguments{
-\item{x}{is number of columns}
-
-\item{y}{is number of rows}
-}
-\value{
-a matrix
-}
 \description{
-This code makes an elevational grid with negative numbers as lakes/water. This matrix code only works with matrices of size 5x5 and 9x9. Don't do it any other size matrix. This code was created for the programming for biologists course in fall of 2016.
-
- It uses three-ish functions.
-   First the mat_function to create a matrix with corners filled in
-   second the diamond step function
-   third the square step function
-   fourth the wrapper for everything
+This code makes an elevational grid with negative numbers as lakes/water. This matrix code only works with matrices of size 5x5 and 9x9. Don't do it any other size matrix. This code was created for the programming for biologists course in fall of 2016. Maintainer is maggi.kraft@aggiemail.usu.edu
+It uses four functions.
+First the mat_function to create a matrix with corners filled in
+second the diamond step function
+third the square step function
+fourth the wrapper for everything
 }
 \author{
 Maggi Kraft
